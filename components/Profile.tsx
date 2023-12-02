@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { StyleSheet, View, Alert, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import { Session } from '@supabase/supabase-js'
+
 import * as ImagePicker from 'expo-image-picker';
 
 export default function Profile({ session }: { session: Session }) {
@@ -98,38 +99,40 @@ export default function Profile({ session }: { session: Session }) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} style={styles.input} disabled />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} style={styles.input} onChangeText={(text) => setUsername(text)} />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input label="Website" value={website || ''} style={styles.input} onChangeText={(text) => setWebsite(text)} />
-      </View>
+    
+    <View>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
+            <Input label="Email" value={session?.user?.email} style={styles.input} disabled />
+        </View>
+        <View style={styles.verticallySpaced}>
+            <Input label="Username" value={username || ''} style={styles.input} onChangeText={(text) => setUsername(text)} />
+        </View>
+        <View style={styles.verticallySpaced}>
+            <Input label="Website" value={website || ''} style={styles.input} onChangeText={(text) => setWebsite(text)} />
+        </View>        
 
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Pick an image from camera roll" onPress={pickImage} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
-        
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      </View>
-
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
-          title={loading ? 'Loading ...' : 'Update'}
-          onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
-          disabled={loading}
-          buttonStyle={styles.button} 
-          containerStyle={styles.button}
-          disabledStyle={styles.disabledbutton}
+            title={loading ? 'Loading ...' : 'Update'}
+            onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
+            disabled={loading}
+            buttonStyle={styles.button} 
+            containerStyle={styles.button}
+            disabledStyle={styles.disabledbutton}
         />
-      </View>
+        </View>
 
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign Out " onPress={() => supabase.auth.signOut()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
-      </View>
+        <View style={styles.verticallySpaced}>
+            <Button title="Sign Out " onPress={() => supabase.auth.signOut()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
+        </View>
+
+        <View style={[styles.verticallySpaced, styles.mt20]}>
+            <Button title="Pick an image from camera roll" onPress={pickImage} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
+
+            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        </View>
     </View>
+    
   )
 }
 
