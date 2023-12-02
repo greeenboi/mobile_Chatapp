@@ -67,18 +67,19 @@ export default function Auth() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
-          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+          leftIcon={{ type: 'font-awesome', name: 'envelope', color: 'gray'  }}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
+          style={styles.input}
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton} />
       </View>
       
       {sentOtp ? (
@@ -86,16 +87,17 @@ export default function Auth() {
           <View style={styles.verticallySpaced}>
             <Input
               label="number"
-              leftIcon={{ type: 'font-awesome', name: 'lock' }}
+              leftIcon={{ type: 'font-awesome', name: 'key', color: 'gray' }}
               onChangeText={(e) => setOtp(e)}
               value={otp}
               secureTextEntry={false}
               placeholder="Otp"
               keyboardType="numeric"
+              style={styles.input}
             />
           </View>
           <View style={styles.verticallySpaced}>
-            <Button title="Sign up" disabled={loading} onPress={() => loginWithOtp()} />
+            <Button title="Sign up" disabled={loading} onPress={() => loginWithOtp()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton} />
           </View>
         </>
       ) : null}
@@ -108,6 +110,9 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 40,
     padding: 12,
+    backgroundColor: 'rgba(0,0,0, 0.3)',
+    marginHorizontal: 12,
+    borderRadius: 18,
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -117,4 +122,22 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
+  input:{
+    color: 'white',
+  },
+  button:{
+    backgroundColor: 'rgba(90, 120, 250, 0.3)',
+    color: 'white',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 24,
+    
+  },
+  disabledbutton:{
+    backgroundColor: 'rgba(90, 120, 250, 0.9)',
+    color: 'white',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 18,
+  }
 })
