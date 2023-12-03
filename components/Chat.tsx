@@ -1,10 +1,10 @@
 import { Text, Alert,  StyleSheet, View } from 'react-native'
 import React, {useEffect, useState} from 'react'
-import { Button, Input } from 'react-native-elements'
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { supabase } from '../lib/supabase'
 import { ScrollView } from 'react-native';
+
 
 export default function Chat({ session: { session: Session } })  {
   const session = useContext(AuthContext);
@@ -46,23 +46,81 @@ export default function Chat({ session: { session: Session } })  {
     return (
       <View style={styles.container}>
         <ScrollView style={[styles.chatContainer, styles.mb20]}>
-          <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-            <Text style={styles.userreceive} >samplePerson</Text> 
-            <Text style={styles.text} >ajahaha</Text>          
-          </View>
-          <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-            <Text style={styles.userreceive} >samplePerson</Text> 
-            <Text style={styles.text} > HMMM</Text>          
-          </View>
-          <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
-            <Text style={styles.usersent} > {username}</Text> 
-            <Text style={styles.text} > Hello</Text>          
-          </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} >ajahaha</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} > HMMM</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
+              <Text style={styles.usersent} > {username}</Text> 
+              <Text style={styles.text} > Hello</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} >ajahaha</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} > HMMM</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
+              <Text style={styles.usersent} > {username}</Text> 
+              <Text style={styles.text} > Hello</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} >ajahaha</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} > HMMM</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
+              <Text style={styles.usersent} > {username}</Text> 
+              <Text style={styles.text} > Hello</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} >ajahaha</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} > HMMM</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
+              <Text style={styles.usersent} > {username}</Text> 
+              <Text style={styles.text} > Hello</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} >ajahaha</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} > HMMM</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
+              <Text style={styles.usersent} > {username}</Text> 
+              <Text style={styles.text} > Hello</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} >ajahaha</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
+              <Text style={styles.userreceive} >samplePerson</Text> 
+              <Text style={styles.text} > HMMM</Text>          
+            </View>
+            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
+              <Text style={styles.usersent} > {username}</Text> 
+              <Text style={styles.text} > Hello</Text>          
+            </View>
         </ScrollView>
-        <View style={styles.verticallySpaced}>
-          <Input label="Type Here..."  style={styles.input}  />
-        </View>
       </View>
+      
     )
 
 }
@@ -93,8 +151,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0, 0.3)',
     padding: 12,
     borderRadius: 18,
-    height: '76%',
+    height: '100%',
     width: '100%',
+    
   },
   sentMSG: {
     backgroundColor: 'rgba(90,90,90,0.8)',
@@ -104,13 +163,14 @@ const styles = StyleSheet.create({
     padding:8,
     borderBottomRightRadius: 0,
     borderRadius: 18,
+    
   },
   receivedMSG: {
     backgroundColor: 'rgba(90,120,90,0.8)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
-    padding:8,
+    padding:10,
     borderBottomLeftRadius: 0,
     borderRadius: 18,
     display: 'flex',
@@ -131,9 +191,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'flex-start',
   },
-
-  input:{
-
-  }
  
 })

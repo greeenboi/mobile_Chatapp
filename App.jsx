@@ -5,7 +5,6 @@ import Auth from './components/Auth'
 import Home from './components/Home'
 import Chat from './components/Chat'
 import { StyleSheet, View } from 'react-native'
-import { Session } from '@supabase/supabase-js'
 import { AuthContext } from './context/AuthContext';
 import { ImageBackground } from 'react-native';
 

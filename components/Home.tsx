@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Chat from './Chat'
 import Profile from './Profile'
+import ChatInput from './ChatInput'
 import { supabase } from '../lib/supabase'
 import { StyleSheet, View, Alert, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
@@ -16,9 +17,15 @@ export default function Home() {
   return (
     <>
       <Button title={isProfile ? 'Go to Profile' : 'Go to Chat'} onPress={() => setIsProfile(!isProfile)} buttonStyle={styles.button}  disabledStyle={styles.disabledbutton} />
-      <ScrollView showsVerticalScrollIndicator >
-        {isProfile ? <Chat key={session.user.id} session={session} /> : <Profile key={session.user.id} session={session} />}
-      </ScrollView>
+      
+        {isProfile ? 
+          <ScrollView showsVerticalScrollIndicator={true} >
+            <Chat key={session.user.id} session={session} /> 
+          </ScrollView>
+            : 
+          <Profile key={session.user.id} session={session} />
+        }
+      {isProfile ? <ChatInput />  : null }
     </>
   )
 }
@@ -41,5 +48,6 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 1,
     borderRadius: 18,
-  }  
+  },
+   
 })
