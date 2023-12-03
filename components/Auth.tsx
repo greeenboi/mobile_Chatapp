@@ -97,7 +97,7 @@ export default function Auth() {
             />
           </View>
           <View style={styles.verticallySpaced}>
-            <Button title="Sign up" disabled={loading} onPress={() => loginWithOtp()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton} />
+            <Button title="Log In" disabled={loading} onPress={() => loginWithOtp()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton} />
           </View>
         </>
       ) : null}

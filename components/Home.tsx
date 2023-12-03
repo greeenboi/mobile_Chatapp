@@ -10,7 +10,7 @@ import { AuthContext } from '../context/AuthContext'
 import { ScrollView } from 'react-native';
 
 export default function Home() {
-  const [ isProfile, setIsProfile ] = useState(false)
+  const [ isProfile, setIsProfile ] = useState(true)
   const session = useContext(AuthContext);
 
   return (

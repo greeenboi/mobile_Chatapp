@@ -13,22 +13,53 @@ export default function Profile({ session }: { session: Session }) {
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
   
+  
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
+    setLoading(true);
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
+    
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+
+      const fileName = `${username}_image.jpg`
+
+      try {
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(fileName, result.assets[0].base64, {
+            upsert: true,
+            contentType: 'image/jpeg',
+          });
+        if (uploadError) {
+          console.error('Error uploading image: ', uploadError);
+          Alert.alert('Error uploading image: ', uploadError.message);
+        } else {
+          const publicUrl = supabase.storage.from('avatars').getPublicUrl(fileName);
+          setAvatarUrl(publicUrl.data.publicUrl as string);
+        }
+      }
+      catch (error) {
+        console.error('Error uploading image: ', error);
+        Alert.alert('Error uploading image: ', error.message);
+      }
+
+
     }
+
+    
+      setLoading(false);
+    
+
   };
 
   useEffect(() => {
@@ -80,7 +111,7 @@ export default function Profile({ session }: { session: Session }) {
         id: session?.user.id,
         username,
         website,
-        avatar_url,
+        avatar_url: avatarUrl,
         updated_at: new Date(),
       }
 
@@ -97,6 +128,9 @@ export default function Profile({ session }: { session: Session }) {
       setLoading(false)
     }
   }
+
+
+
 
   return (
     
@@ -127,7 +161,7 @@ export default function Profile({ session }: { session: Session }) {
         </View>
 
         <View style={[styles.verticallySpaced, styles.mt20]}>
-            <Button title="Pick an image from camera roll" onPress={pickImage} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
+            <Button title="change profile picture" onPress={pickImage} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
 
             {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
         </View>
