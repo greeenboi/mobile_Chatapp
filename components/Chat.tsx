@@ -1,5 +1,5 @@
 import { Text, Alert,  StyleSheet, View } from 'react-native'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { supabase } from '../lib/supabase'
@@ -8,12 +8,17 @@ import { ScrollView } from 'react-native';
 
 export default function Chat({ session: { session: Session } })  {
   const session = useContext(AuthContext);
-  const id = session.user.id; // Replace 'email' with the property that holds the username
+  const id = session.user.id; 
   const [username, setUsername] = useState('')
-  
+  const scrollViewRef = useRef<ScrollView>(null);
+
   useEffect(() => {
-    if (session) getProfile()
-  }, [session])
+    scrollViewRef.current?.scrollToEnd({ animated: false });
+  }, []);
+
+  useEffect(() => {
+    if (session) getProfile();
+  }, [session]);
 
   async function getProfile() {
     try {
@@ -45,7 +50,7 @@ export default function Chat({ session: { session: Session } })  {
 
     return (
       <View style={styles.container}>
-        <ScrollView style={[styles.chatContainer, styles.mb20]}>
+        <ScrollView style={[styles.chatContainer, styles.mb20]} ref={scrollViewRef}>
             <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
               <Text style={styles.userreceive} >samplePerson</Text> 
               <Text style={styles.text} >ajahaha</Text>          
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
     
   },
   sentMSG: {
-    backgroundColor: 'rgba(90,90,90,0.8)',
+    backgroundColor: 'rgba(90,120,90,0.8)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
@@ -166,7 +171,7 @@ const styles = StyleSheet.create({
     
   },
   receivedMSG: {
-    backgroundColor: 'rgba(90,120,90,0.8)',
+    backgroundColor: 'rgba(90,90,90,0.8)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
