@@ -11,6 +11,8 @@ export default function Chat({ session: { session: Session } })  {
   const id = session.user.id; 
   const [username, setUsername] = useState('')
   const scrollViewRef = useRef<ScrollView>(null);
+  const [messages, setMessages] = useState([]);
+
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: false });
@@ -19,6 +21,9 @@ export default function Chat({ session: { session: Session } })  {
   useEffect(() => {
     if (session) getProfile();
   }, [session]);
+
+
+  
 
   async function getProfile() {
     try {
@@ -47,6 +52,8 @@ export default function Chat({ session: { session: Session } })  {
       
     }
   }
+
+
 
     return (
       <View style={styles.container}>

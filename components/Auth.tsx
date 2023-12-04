@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View, Text } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { Button, Input } from 'react-native-elements'
+import { Button, Image, Input } from 'react-native-elements'
+import { ScrollView } from 'react-native';
+
 
 export default function Auth() {
   const [email, setEmail] = useState('')
@@ -9,6 +11,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false)
   const [sentOtp, setSentOtp] = useState(false)
   
+
   async function signInWithEmail() {
     setLoading(true)
     const { error } = await supabase.auth.signInWithOtp({ 
@@ -63,7 +66,11 @@ export default function Auth() {
   }
 
   return (
+    <View style={{ display:'flex', flexDirection:"column"}}>
+    {/* <Image style={{flex:2 }} source={require('../assets/layer.png')}  resizeMode='contain'/>  */}
+    
     <View style={styles.container}>
+      
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
@@ -101,18 +108,21 @@ export default function Auth() {
           </View>
         </>
       ) : null}
-
+    </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    // marginTop: 40,
     padding: 12,
     backgroundColor: 'rgba(0,0,0, 0.3)',
     marginHorizontal: 12,
     borderRadius: 18,
+    display: 'flex',
+    flexDirection: 'column',
+
   },
   verticallySpaced: {
     paddingTop: 4,

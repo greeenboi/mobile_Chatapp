@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
 import Auth from './components/Auth'
 import Home from './components/Home'
-import Chat from './components/Chat'
+
 import { StyleSheet, View } from 'react-native'
 import { AuthContext } from './context/AuthContext';
 import { ImageBackground } from 'react-native';
+
 
 
 export default function App() {
@@ -23,9 +24,15 @@ export default function App() {
   }, [])
 
   return (
-    <AuthContext.Provider value={session}>
+    <AuthContext.Provider value={session} >
       <ImageBackground source={require('./assets/Background.jpg')} style={styles.container}>
-        {session && session.user ? <Home /> : <Auth />}
+      
+        {session && session.user ? (
+          <Home /> 
+          ) : (
+        <Auth />
+        )}
+      
       </ImageBackground>
     </AuthContext.Provider >
   )
@@ -35,6 +42,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: '#080B2C',
   },
 });
