@@ -11,6 +11,7 @@ export default function Chat({ session: { session: Session } })  {
   const id = session.user.id; 
   const [username, setUsername] = useState('')
   const scrollViewRef = useRef<ScrollView>(null);
+  const [channel, setChannel] = useState([]);
   const [messages, setMessages] = useState([]);
 
 
@@ -19,11 +20,40 @@ export default function Chat({ session: { session: Session } })  {
   }, []);
 
   useEffect(() => {
-    if (session) getProfile();
-  }, [session]);
+    if (session) {
+      getProfile();
+    }
+  }, [session]); 
 
-
+  useEffect(() => {
+    fetchInitialMessages();
+    const subscription = supabase
+      .channel(session.channel)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Messages' }, payload => {
+        console.log('Change received!', payload)
+      })
+      .subscribe();
   
+      return () => {
+        supabase.removeChannel(subscription);
+      };
+  }, []);
+  
+
+  async function fetchInitialMessages() {
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .order('id', { ascending: false })
+      .limit(10);
+  
+    if (error) {
+      console.error(error);
+      return;
+    }
+  
+    setMessages(data || []);
+  }
 
   async function getProfile() {
     try {
@@ -32,7 +62,7 @@ export default function Chat({ session: { session: Session } })  {
 
       const { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, website, avatar_url`)
+        .select(`username, website, avatar_url, channel`)
         .eq('id', session?.user.id)
         .single()
       if (error && status !== 406) {
@@ -41,17 +71,16 @@ export default function Chat({ session: { session: Session } })  {
 
       if (data) {
         setUsername(data.username)
-        // setWebsite(data.website)
-        // setAvatarUrl(data.avatar_url)
+        setChannel(data.channel)
       }
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
       }
-    } finally {
-      
-    }
+    } 
   }
+
+  
 
 
 

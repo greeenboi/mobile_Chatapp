@@ -15,6 +15,7 @@ export default function ChatInput() {
   const [username, setUsername] = useState('')
   const [id, setId] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
+  const [channel, setChannel] = useState('')
 
   useEffect(() => {
     if (session) getProfile()
@@ -27,7 +28,7 @@ export default function ChatInput() {
 
       const { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, id, avatar_url`)
+        .select(`username, id, avatar_url, channel`)
         .eq('id', session?.user.id)
         .single()
       if (error && status !== 406) {
@@ -38,6 +39,7 @@ export default function ChatInput() {
         setUsername(data.username)
         setId(data.id)
         setAvatarUrl(data.avatar_url)
+        setChannel(data.channel)
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -51,12 +53,16 @@ export default function ChatInput() {
 
 
   const handleSubmit = async () => {
+    if (!content.trim()) {
+      // Content is empty or only contains whitespace
+      return;
+    }
     const payload = {
       content: content,
       profileId: id,
       username: username,
       avatarUri: avatarUrl,
-      channel: 1010,
+      channel: channel,
     };
 
     try{
@@ -69,7 +75,7 @@ export default function ChatInput() {
               profile_id: payload.profileId, 
               content: payload.content, 
               username: payload.username, 
-              Channel: payload.channel, 
+              channel: payload.channel, 
               Avatar_uri: payload.avatarUri  
             })
       .select()
@@ -87,6 +93,7 @@ export default function ChatInput() {
         Alert.alert(error.message)
       }
     } finally {
+      setContent('');
       setLoading(false)
     }
   };
@@ -110,7 +117,7 @@ export default function ChatInput() {
         disabledStyle={styles.disabledbutton}
         onPress={handleSubmit}
         >Hello</Button>
-        <Input label="Type Here..."  inputStyle={styles.input} inputContainerStyle={styles.input} value={content} onChangeText={setContent}/>
+        <Input placeholder="Type Here..."   inputStyle={[styles.input, {marginTop:10}]} inputContainerStyle={styles.input} value={content} onChangeText={setContent}/>
     </View>
   )
 }
@@ -134,8 +141,8 @@ const styles = StyleSheet.create({
   input:{
     color: 'white',
     width: '82%',
-    height: 50,
-    margin: 0,
+    height: 70,
+    marginTop: 0,
     flex:3,
   },
   sendButton:{
