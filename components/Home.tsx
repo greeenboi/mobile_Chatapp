@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import Chat from './Chat'
 import Profile from './Profile'
 import ChatInput from './ChatInput'
-import { supabase } from '../lib/supabase'
+
 import { StyleSheet, View, Alert, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
-import { Session } from '@supabase/supabase-js'
+
 import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { ScrollView } from 'react-native';
