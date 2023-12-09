@@ -84,9 +84,7 @@ export default function ChatInput() {
         Alert.alert(error.message)
         throw error
       }
-      else {
-        Alert.alert('Message Sent!')
-      }
+      
 
     } catch (error) {
       if (error instanceof Error) {

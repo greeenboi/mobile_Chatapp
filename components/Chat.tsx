@@ -10,14 +10,11 @@ export default function Chat({ session: { session: Session } })  {
   const session = useContext(AuthContext);
   const id = session.user.id; 
   const [username, setUsername] = useState('')
-  const scrollViewRef = useRef<ScrollView>(null);
-  const [channel, setChannel] = useState([]);
+  const scrollRef = useRef<ScrollView>();
+  
+  const [channel, setChannel] = useState('');
   const [messages, setMessages] = useState([]);
 
-
-  useEffect(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: false });
-  }, []);
 
   useEffect(() => {
     if (session) {
@@ -25,27 +22,44 @@ export default function Chat({ session: { session: Session } })  {
     }
   }, [session]); 
 
+  // useEffect(() => {
+  //   fetchInitialMessages();
+  //   const subscription = supabase
+  //     .channel(session.channel)
+  //     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Messages' }, payload => {
+  //       console.log('Change received!', payload)
+  //     })
+  //     .subscribe();
+  
+      
+  // }, []);
+  
   useEffect(() => {
     fetchInitialMessages();
+
     const subscription = supabase
-      .channel(session.channel)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Messages' }, payload => {
-        console.log('Change received!', payload)
-      })
+      .channel(channel) 
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, handleInserts)
       .subscribe();
-  
-      return () => {
-        supabase.removeChannel(subscription);
-      };
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
-  
+
+  const handleInserts = (payload) => {
+    console.log('Change received!', payload)
+    scrollRef.current?.scrollToEnd({ animated: true });
+    setMessages(messages => [...messages, payload.new]);
+  }
 
   async function fetchInitialMessages() {
     const { data, error } = await supabase
       .from('messages')
       .select('*')
-      .order('id', { ascending: false })
-      .limit(10);
+      .eq('channel', channel)
+      .order('created_at', { ascending: true })
+      .range(0,49)
   
     if (error) {
       console.error(error);
@@ -54,7 +68,6 @@ export default function Chat({ session: { session: Session } })  {
   
     setMessages(data || []);
   }
-
   async function getProfile() {
     try {
       
@@ -72,6 +85,7 @@ export default function Chat({ session: { session: Session } })  {
       if (data) {
         setUsername(data.username)
         setChannel(data.channel)
+      
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -86,79 +100,23 @@ export default function Chat({ session: { session: Session } })  {
 
     return (
       <View style={styles.container}>
-        <ScrollView style={[styles.chatContainer, styles.mb20]} ref={scrollViewRef}>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} >ajahaha</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} > HMMM</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
-              <Text style={styles.usersent} > {username}</Text> 
-              <Text style={styles.text} > Hello</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} >ajahaha</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} > HMMM</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
-              <Text style={styles.usersent} > {username}</Text> 
-              <Text style={styles.text} > Hello</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} >ajahaha</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} > HMMM</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
-              <Text style={styles.usersent} > {username}</Text> 
-              <Text style={styles.text} > Hello</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} >ajahaha</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} > HMMM</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
-              <Text style={styles.usersent} > {username}</Text> 
-              <Text style={styles.text} > Hello</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} >ajahaha</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} > HMMM</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
-              <Text style={styles.usersent} > {username}</Text> 
-              <Text style={styles.text} > Hello</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} >ajahaha</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.receivedMSG , styles.mb20]}>
-              <Text style={styles.userreceive} >samplePerson</Text> 
-              <Text style={styles.text} > HMMM</Text>          
-            </View>
-            <View style={[styles.verticallySpaced, styles.sentMSG , styles.mb20]}>
-              <Text style={styles.usersent} > {username}</Text> 
-              <Text style={styles.text} > Hello</Text>          
-            </View>
+        <ScrollView style={[styles.chatContainer, styles.mb20]} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
+            
+            {messages.map((message, index) => (
+              <View 
+                key={index} 
+                style={[
+                  styles.verticallySpaced, 
+                  message.username === username ? styles.sentMSG : styles.receivedMSG, 
+                  styles.mb20
+                ]}
+              >
+                <Text style={message.username === username ? styles.usersent : styles.userreceive}>
+                  {message.username}
+                </Text> 
+                <Text style={styles.text}>{message.content}</Text>          
+              </View>
+            ))}
         </ScrollView>
       </View>
       
