@@ -20,7 +20,7 @@ export default function Home() {
       
         {isProfile ? 
           <ScrollView showsVerticalScrollIndicator={true} >
-            <Chat key={session.user.id} session={session} /> 
+            <Chat key={session.user.id}  /> 
           </ScrollView>
             : 
           <Profile key={session.user.id} session={session} />

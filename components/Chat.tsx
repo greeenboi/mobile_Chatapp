@@ -4,12 +4,12 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { supabase } from '../lib/supabase'
 import { ScrollView } from 'react-native';
-import { Image } from 'react-native';
+// import { Image } from 'react-native';
 import NullMessage from './NullMessage';
 
-export default function Chat({ session: { session: Session } })  {
+export default function Chat()  {
   const session = useContext(AuthContext);
-  const id = session.user.id; 
+  
   const [username, setUsername] = useState('')
   const scrollRef = useRef<ScrollView>();
   

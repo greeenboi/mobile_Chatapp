@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View, Text } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { Button, Image, Input } from 'react-native-elements'
-import { ScrollView } from 'react-native';
+import { Button, Input } from 'react-native-elements'
+
 
 
 export default function Auth() {

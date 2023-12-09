@@ -4,7 +4,7 @@ import { supabase } from './lib/supabase'
 import Auth from './components/Auth'
 import Home from './components/Home'
 
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { AuthContext } from './context/AuthContext';
 import { ImageBackground } from 'react-native';
 

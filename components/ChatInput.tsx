@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { StyleSheet, Alert  } from 'react-native'
 import { Button, Input} from 'react-native-elements'
 import { Icon } from 'react-native-elements';
-import { KeyboardAvoidingView } from 'react-native';
+
 import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -54,7 +54,7 @@ export default function ChatInput() {
 
   const handleSubmit = async () => {
     if (!content.trim()) {
-      // Content is empty or only contains whitespace
+      
       return;
     }
     const payload = {
@@ -96,9 +96,6 @@ export default function ChatInput() {
     }
   };
 
-  const handleTest = () => {
-    Alert.alert(avatarUrl)
-  }
 
   return (
     <View style={styles.inputContainer} >

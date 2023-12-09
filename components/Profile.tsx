@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Chat from './Chat'
 import { supabase } from '../lib/supabase'
 import { StyleSheet, View, Alert, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
