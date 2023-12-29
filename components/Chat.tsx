@@ -63,7 +63,7 @@ export default function Chat()  {
       // console.log('Data:', data);
       // console.log('Error:', error);
       setMessages(data );
-      // console.log(messages.length);
+      // console.log(messages);
     }
     // console.log(data);
   }
@@ -99,7 +99,12 @@ export default function Chat()  {
   }
 
   
-
+  function isToday(date) {
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear();
+  }
 
 
     return (
@@ -125,7 +130,14 @@ export default function Chat()  {
                 <Text style={message.username === username ? styles.usersent : styles.userreceive}>
                   {message.username}
                 </Text> 
-                <Text style={styles.text}>{message.content}</Text>          
+                <Text style={styles.text}>{message.content}</Text>    
+                <Text style={styles.time}>
+                  {
+                    isToday(new Date(message.created_at)) 
+                      ? new Date(message.created_at).toLocaleTimeString() 
+                      : new Date(message.created_at).toLocaleDateString()
+                  }
+                </Text>   
               </View>
             ))
           )}
@@ -153,6 +165,10 @@ const styles = StyleSheet.create({
   },
   mb20: {
     marginBottom: 20,
+  },
+  time: {
+    color: 'gray',
+    fontSize: 12,
   },
   text:{
     color: 'white',

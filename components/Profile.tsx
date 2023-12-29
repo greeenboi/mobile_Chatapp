@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { Picker } from '@react-native-picker/picker';
 import { StyleSheet, View, Alert, Image } from 'react-native'
-import { Button, Input } from 'react-native-elements'
+import { Button, Input, Text } from 'react-native-elements'
 import { Session } from '@supabase/supabase-js'
 import { ScrollView } from 'react-native'
 import { decode } from "base64-arraybuffer";
@@ -14,7 +15,7 @@ export default function Profile({ session }: { session: Session }) {
   const [avatarUrl, setAvatarUrl] = useState('')
   const [name, setName] = useState('')
   const [channel, setChannel] = useState('1010')
-  
+  const [channelList, setChannelList] = useState([])
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
@@ -23,18 +24,14 @@ export default function Profile({ session }: { session: Session }) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
       base64: true,
     });
 
-        
-
     if (!result.canceled) {
       
-      
       setImage(result.assets[0].uri);    
-      
       
       if (!result.assets[0].base64) {
         Alert.alert("[uploadToSupabase] ArrayBuffer is null");
@@ -47,12 +44,6 @@ export default function Profile({ session }: { session: Session }) {
       }
       
       const res = decode(result.assets[0].base64);
-      
-      
-      
-      
-      
-      
       try {
         const fileName = `${username}_image.jpeg`
         const { data, error: uploadError } = await supabase.storage
@@ -163,6 +154,29 @@ export default function Profile({ session }: { session: Session }) {
     }
   }
 
+  useEffect(() => {
+    async function fetchUniqueChannels() {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('channel')
+        
+    
+      if (error) {
+        console.error('Error fetching unique channels: ', error);
+        return;
+      }
+      else if(!error){
+        const uniqueChannels = Array.from(new Set(data.map(item => item.channel)));
+
+        setChannelList(uniqueChannels);
+        console.log(uniqueChannels);
+        
+      }
+    
+    }
+    fetchUniqueChannels();
+  }, [])
+
 
 
 
@@ -181,10 +195,23 @@ export default function Profile({ session }: { session: Session }) {
         <View style={styles.verticallySpaced}>
             <Input label="Full Name" value={name || ''} style={styles.input} onChangeText={(text) => setName(text)} />
         </View>    
-        <View style={styles.verticallySpaced}>
+        {/* <View style={styles.verticallySpaced}>
             <Input label="Channel" value={channel || '1010'} style={styles.input} onChangeText={(text) => setChannel(text)} />
+        </View>     */}
+        <View style={styles.verticallyHSpaced}>
+          <Text style={{ color:'rgba(200,200,200,0.6)', fontSize:18}}>Channel</Text>
+          <Picker
+            selectedValue={channel || '1010'}
+            style={styles.picker}
+            onValueChange={(itemValue) => setChannel(itemValue)}
+            mode="dropdown" // Android only
+            prompt="Select a channel" // Android only
+          >
+            {channelList.map((channel, index) => (
+              <Picker.Item key={index} label={channel} value={channel} style={styles.pickerinput} />
+            ))}
+          </Picker>
         </View>    
-            
 
         <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
@@ -225,8 +252,25 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     alignSelf: 'stretch',
   },
+  verticallyHSpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingHorizontal: 12,
+    alignSelf: 'stretch',
+  },
   mt20: {
     marginTop: 20,
+  },
+  picker: {
+    color: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
+    fontSize: 22,
+    backgroundColor:'transparent'
+  },
+  pickerinput: {
+    color: 'black',
+    fontSize: 22,
   },
   input:{
     color: 'white',
