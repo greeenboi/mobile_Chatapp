@@ -10,7 +10,7 @@ import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { ScrollView } from 'react-native';
 
-export default function Home() {
+export default function Home({pushToken}: {pushToken: string}) {
   const [ isProfile, setIsProfile ] = useState(true)
   const session = useContext(AuthContext);
 
@@ -20,7 +20,7 @@ export default function Home() {
       
         {isProfile ? 
           <ScrollView showsVerticalScrollIndicator={true} >
-            <Chat key={session.user.id}  /> 
+            <Chat key={session.user.id} pushToken={pushToken} /> 
           </ScrollView>
             : 
           <Profile key={session.user.id} session={session} />

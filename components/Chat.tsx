@@ -6,8 +6,30 @@ import { supabase } from '../lib/supabase'
 import { ScrollView } from 'react-native';
 // import { Image } from 'react-native';
 import NullMessage from './NullMessage';
+import { Button } from 'react-native-elements';
 
-export default function Chat()  {
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Original Title',
+    body: 'And here is the body!',
+    data: { someData: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
+
+export default function Chat({pushToken}: {pushToken: string})  {
   const session = useContext(AuthContext);
   
   const [username, setUsername] = useState('')
@@ -44,6 +66,7 @@ export default function Chat()  {
     // console.log('Change received!', payload)
     scrollRef.current?.scrollToEnd({ animated: true });
     setMessages(messages => [...messages, payload.new]);
+    console.log(payload.new);
   }
 
   async function fetchInitialMessages() {
@@ -141,6 +164,12 @@ export default function Chat()  {
               </View>
             ))
           )}
+          <Button
+            title="Press to Send Notification"
+            onPress={async () => {
+              await sendPushNotification(pushToken);
+            }}
+          />
         </ScrollView>
       </View>
       
