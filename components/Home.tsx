@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Chat from './Chat'
 import Profile from './Profile'
 import ChatInput from './ChatInput'
 
-import { StyleSheet, View, Alert, Image } from 'react-native'
-import { Button, Input } from 'react-native-elements'
+import { StyleSheet } from 'react-native'
+import { Button } from 'react-native-elements'
 
 import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'

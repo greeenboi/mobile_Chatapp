@@ -8,30 +8,38 @@ import { ScrollView } from 'react-native';
 import NullMessage from './NullMessage';
 import { Button } from 'react-native-elements';
 
-async function sendPushNotification(expoPushToken) {
+async function sendPushNotification(expoPushToken, content , sender) {
   const message = {
     to: expoPushToken,
     sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { someData: 'goes here' },
+    title: sender,
+    body: content,
+    data: { someData: 'message' },
   };
+  // console.log(message);
+  try {
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
 
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Server responded with status ${response.status}: ${JSON.stringify(errorData)}`);
+    }
+  } catch (error) {
+    Alert.alert(error);
+  }
 }
 
 
 export default function Chat({pushToken}: {pushToken: string})  {
   const session = useContext(AuthContext);
-  
   const [username, setUsername] = useState('')
   const scrollRef = useRef<ScrollView>();
   
@@ -62,12 +70,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
     }
   }, [session, channel]);
 
-  const handleInserts = (payload) => {
-    // console.log('Change received!', payload)
-    scrollRef.current?.scrollToEnd({ animated: true });
-    setMessages(messages => [...messages, payload.new]);
-    console.log(payload.new);
-  }
+  
 
   async function fetchInitialMessages() {
     // Alert.alert(channel)
@@ -121,6 +124,22 @@ export default function Chat({pushToken}: {pushToken: string})  {
     } 
   }
 
+  const handleInserts = (payload) => {
+    // console.log('Change received!', payload)
+    scrollRef.current?.scrollToEnd({ animated: true });
+    setMessages(messages => [...messages, payload.new]);
+    // console.log(payload.new.username);
+    // console.log(username);
+    if (payload.new.username !== username) {
+    // console.log('Sending push notification...');
+    (async () => {       
+      // console.log(pushToken)
+      await sendPushNotification(pushToken, payload.new.content, payload.new.username);
+    })();
+    } // Immediately invoke the async function
+    // console.log(payload.new);
+  }
+
   
   function isToday(date) {
     const today = new Date();
@@ -164,12 +183,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
               </View>
             ))
           )}
-          <Button
-            title="Press to Send Notification"
-            onPress={async () => {
-              await sendPushNotification(pushToken);
-            }}
-          />
+          
         </ScrollView>
       </View>
       
