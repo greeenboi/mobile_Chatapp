@@ -5,6 +5,7 @@ import { StyleSheet, View, Alert, Image } from 'react-native'
 import { Button, Input, Text } from 'react-native-elements'
 import { Session } from '@supabase/supabase-js'
 import { ScrollView } from 'react-native'
+import { Image as Eimage } from 'expo-image';
 import { decode } from "base64-arraybuffer";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -169,7 +170,7 @@ export default function Profile({ session }: { session: Session }) {
         const uniqueChannels = Array.from(new Set(data.map(item => item.channel)));
 
         setChannelList(uniqueChannels);
-        console.log(uniqueChannels);
+        // console.log(uniqueChannels);
         
       }
     
@@ -195,11 +196,11 @@ export default function Profile({ session }: { session: Session }) {
         <View style={styles.verticallySpaced}>
             <Input label="Full Name" value={name || ''} style={styles.input} onChangeText={(text) => setName(text)} />
         </View>    
-        {/* <View style={styles.verticallySpaced}>
-            <Input label="Channel" value={channel || '1010'} style={styles.input} onChangeText={(text) => setChannel(text)} />
-        </View>     */}
+        <View style={styles.verticallySpaced}>
+            <Input label="Create Channel" value={channel || '1010'} style={styles.input} onChangeText={(text) => setChannel(text)} />
+        </View>    
         <View style={styles.verticallyHSpaced}>
-          <Text style={{ color:'rgba(200,200,200,0.6)', fontSize:18}}>Channel</Text>
+          <Text style={{ color:'rgba(200,200,200,0.6)', fontSize:18}}>Change Channel</Text>
           <Picker
             selectedValue={channel || '1010'}
             style={styles.picker}
@@ -212,7 +213,7 @@ export default function Profile({ session }: { session: Session }) {
             ))}
           </Picker>
         </View>    
-
+        
         <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
             title={loading ? 'Loading ...' : 'Update'}
@@ -228,10 +229,13 @@ export default function Profile({ session }: { session: Session }) {
             <Button title="Sign Out " onPress={() => supabase.auth.signOut()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
         </View>
 
-        <View style={[styles.verticallySpaced, styles.mt20]}>
-            <Button title="change profile picture" onPress={pickImage} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
+        {/* <View style={  styles.verticallySpaced}>
+          <Eimage source={avatarUrl} style={{ width: 400, height: 400 }} />
+        </View> */}
 
-            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        <View style={[styles.verticallySpaced, styles.mt20, styles.imageBox]}>
+            {image ? <Image source={{ uri: image }} style={{ width: 200, height: 200 }} /> : <Eimage source={avatarUrl ? {uri: avatarUrl} : require('../assets/placeholder.png')} style={{ width: 300, height: 300 , borderRadius: 20 }} />}
+            <Button title="change profile picture" onPress={pickImage} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton}/>
         </View>
     </ScrollView>
     
@@ -260,6 +264,14 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  imageBox:{
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 5,
+    width: '100%',
   },
   picker: {
     color: 'white',

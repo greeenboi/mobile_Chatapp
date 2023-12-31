@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { supabase } from '../lib/supabase'
 import { ScrollView } from 'react-native';
-// import { Image } from 'react-native';
+import { Image } from 'expo-image'
 import NullMessage from './NullMessage';
 import { Button } from 'react-native-elements';
 
@@ -45,10 +45,6 @@ export default function Chat({pushToken}: {pushToken: string})  {
   
   const [channel, setChannel] = useState('');
   const [messages, setMessages] = useState([]);
-
-
- 
-  
   
   useEffect(() => {
     if (session) {
@@ -137,7 +133,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
       await sendPushNotification(pushToken, payload.new.content, payload.new.username);
     })();
     } // Immediately invoke the async function
-    // console.log(payload.new);
+    console.log(payload.new);
   }
 
   
@@ -156,30 +152,41 @@ export default function Chat({pushToken}: {pushToken: string})  {
             <NullMessage /> // Render your component when messages is empty
           ) : (
             messages.map((message, index) => (
-              <View 
-                key={index} 
-                style={[
-                  styles.verticallySpaced, 
-                  message.username === username ? styles.sentMSG : styles.receivedMSG, 
-                  styles.mb20
-                ]}
+              <View
+              key={index}
+              style={[styles.messageBox]}
               >
-                {/* <Image 
-                  source={{ uri: message.Avatar_uri }} 
-                  style={{ width: 50, height: 50, borderColor: 'white', borderWidth: 1, borderRadius: 50, }} 
+                <Image
                   
-                /> */}
-                <Text style={message.username === username ? styles.usersent : styles.userreceive}>
-                  {message.username}
-                </Text> 
-                <Text style={styles.text}>{message.content}</Text>    
-                <Text style={styles.time}>
-                  {
-                    isToday(new Date(message.created_at)) 
+                  style={message.username === username ? styles.hidden : styles.image}
+                  source={message.Avatar_uri || require('../assets/placeholder.png') }
+                />
+                <View 
+                  
+                  style={[
+                    styles.verticallySpaced, 
+                    message.username === username ? styles.sentMSG : styles.receivedMSG, 
+                    styles.mb20
+                  ]}
+                  >
+                  
+                  <Text style={message.username === username ? styles.usersent : styles.userreceive}>
+                    {message.username}
+                  </Text> 
+                  <Text style={styles.text}>{message.content}</Text>    
+                  <Text style={styles.time}>
+                    {
+                      isToday(new Date(message.created_at)) 
                       ? new Date(message.created_at).toLocaleTimeString() 
                       : new Date(message.created_at).toLocaleDateString()
-                  }
-                </Text>   
+                    }
+                  </Text>   
+                </View>
+                <Image
+                  
+                  style={message.username === username ? styles.image : styles.hidden}
+                  source={message.Avatar_uri || require('../assets/placeholder.png') }
+                />
               </View>
             ))
           )}
@@ -206,6 +213,14 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     width: '100%',
   },
+  messageBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    // gap: ,
+    alignItems: 'center',
+    width: '100%',
+  },
   mb20: {
     marginBottom: 20,
   },
@@ -225,15 +240,26 @@ const styles = StyleSheet.create({
     width: '100%',
     
   },
+  image:{
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    // alignSelf: 'flex-end',
+    marginBottom: 5,
+  },
+  hidden:{
+    display: 'none',
+  },
   sentMSG: {
     backgroundColor: 'rgba(90,120,90,0.8)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
     padding:8,
+    display: 'flex',
+    width: '80%',
     borderBottomRightRadius: 0,
     borderRadius: 18,
-    
   },
   receivedMSG: {
     backgroundColor: 'rgba(90,90,90,0.8)',
@@ -244,6 +270,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderRadius: 18,
     display: 'flex',
+    width: '80%',
     flexDirection: 'column',
     justifyContent: 'center',
     
@@ -252,6 +279,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: 'rgb(150,150,150)',
     flexDirection: 'row',
+    alignItems: 'center',
     alignSelf: 'flex-end',
     marginTop: 5,
   },
@@ -259,7 +287,8 @@ const styles = StyleSheet.create({
   userreceive:{
     fontSize: 10,
     color: 'rgb(150,150,150)',
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
     alignSelf: 'flex-start',
     marginTop: 5,
   },
