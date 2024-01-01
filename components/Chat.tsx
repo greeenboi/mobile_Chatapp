@@ -89,6 +89,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
     }
     // console.log(data);
   }
+
   async function getProfile() {
     try {
       
