@@ -34,8 +34,8 @@ export default function Home({pushToken}: {pushToken: string}) {
         console.error('Error fetching channel name: ', error);
       }
     };
-    console.log('session.user.id: ', session.user.id);
-    console.log('channelName: ', channelName);
+    // console.log('session.user.id: ', session.user.id);
+    // console.log('channelName: ', channelName);
     fetchChannelName();
   },[])
 
