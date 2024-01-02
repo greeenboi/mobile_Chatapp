@@ -87,11 +87,33 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(async (token) => {
-      
-      setExpoPushToken(token)
-      await supabase.from('profiles').upsert({ id: session?.user.id, expo_push_token: token});
 
+    if (!session) {
+      console.log('Session is null');
+      return;
+    }
+
+    registerForPushNotificationsAsync().then(async (token) => {
+      try {
+        setExpoPushToken(token);
+        const updates = {
+          id: session.user.id,
+          updated_at: new Date(),
+          expo_push_token: token,
+        }
+        console.log(session?.user.id);
+        const { data, error } = await supabase
+          .from('profiles')
+          .upsert(updates)
+  
+        if (error) {
+          console.error('Error updating expo_push_token:', error);
+        } else {
+          console.log('Successfully updated expo_push_token:', data);
+        }
+      } catch (error) {
+        console.error('Unexpected error:', error);
+      }
     });
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -106,7 +128,7 @@ export default function App() {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);
+  }, [session]);
 
   return (
     <AuthContext.Provider value={session} >

@@ -147,7 +147,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
   useEffect(() => {
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
-      console.log('scrolling to end');
+      // console.log('scrolling to end');
     }, 100); // adjust the delay as needed
   }, [messages]);
 
