@@ -6,7 +6,6 @@ import { supabase } from '../lib/supabase'
 import { ScrollView } from 'react-native';
 import { Image } from 'expo-image'
 import NullMessage from './NullMessage';
-import { Button } from 'react-native-elements';
 
 async function sendPushNotification(expoPushToken, content , sender) {
   const message = {
@@ -41,8 +40,8 @@ async function sendPushNotification(expoPushToken, content , sender) {
 export default function Chat({pushToken}: {pushToken: string})  {
   const session = useContext(AuthContext);
   const [username, setUsername] = useState('')
-  const scrollRef = useRef<ScrollView>();
-  
+  const scrollViewRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const [channel, setChannel] = useState('');
   const [messages, setMessages] = useState([]);
   
@@ -89,6 +88,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
     }
     // console.log(data);
   }
+
   async function getProfile() {
     try {
       
@@ -122,7 +122,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
 
   const handleInserts = (payload) => {
     // console.log('Change received!', payload)
-    scrollRef.current?.scrollToEnd({ animated: true });
+    // scrollRef.current?.scrollToEnd({ animated: true });
     setMessages(messages => [...messages, payload.new]);
     // console.log(payload.new.username);
     // console.log(username);
@@ -144,10 +144,27 @@ export default function Chat({pushToken}: {pushToken: string})  {
       date.getFullYear() === today.getFullYear();
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+      // console.log('scrolling to end');
+    }, 100); // adjust the delay as needed
+  }, [messages]);
+
+  
 
     return (
       <View style={styles.container}>
-        <ScrollView style={[styles.chatContainer, styles.mb20]} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
+        <ScrollView 
+          style={[styles.chatContainer, styles.mb20]} 
+          ref={scrollViewRef} 
+          // onScroll={event => {
+          //   console.log('onScroll event handler called');
+          //   const currentScrollPosition = event.nativeEvent.contentOffset.y;
+          //   console.log('Current scroll position:', currentScrollPosition);
+          // }}
+          // scrollEventThrottle={8}
+        >
           {messages.length === 0 ? (
             <NullMessage /> // Render your component when messages is empty
           ) : (
@@ -177,7 +194,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
                   <Text style={styles.time}>
                     {
                       isToday(new Date(message.created_at)) 
-                      ? new Date(message.created_at).toLocaleTimeString() 
+                      ? new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })  
                       : new Date(message.created_at).toLocaleDateString()
                     }
                   </Text>   
