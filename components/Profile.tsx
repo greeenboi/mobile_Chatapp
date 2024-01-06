@@ -9,13 +9,13 @@ import { Image as Eimage } from 'expo-image';
 import { decode } from "base64-arraybuffer";
 import * as ImagePicker from 'expo-image-picker';
 
-export default function Profile({ session }: { session: Session }) {
+export default function Profile({ session, channelName }: { session: Session, channelName: string }) {
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState('')
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
   const [name, setName] = useState('')
-  const [channel, setChannel] = useState('1010')
+  const [channel, setChannel] = useState( channelName)
   const [channelList, setChannelList] = useState([])
   const [image, setImage] = useState(null);
 
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   button:{
-    backgroundColor: 'rgba(90, 120, 250, 0.3)',
+    backgroundColor: 'rgba(108, 79, 247, 0.3)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     
   },
   disabledbutton:{
-    backgroundColor: 'rgba(90, 120, 250, 0.9)',
+    backgroundColor: 'rgba(108, 79, 247, 0.9)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,

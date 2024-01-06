@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { Button, Input } from 'react-native-elements'
+import { Image } from 'expo-image'
 
 
 
@@ -10,6 +11,14 @@ export default function Auth() {
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [sentOtp, setSentOtp] = useState(false)
+
+  const otpInputRef = useRef(null);
+
+  useEffect(() => {
+    if (sentOtp && otpInputRef.current) {
+      otpInputRef.current.focus();
+    }
+  }, [sentOtp]);
   
 
   async function signInWithEmail() {
@@ -69,7 +78,11 @@ export default function Auth() {
     <View style={{ display:'flex', flexDirection:"column"}}>
     {/* <Image style={{flex:2 }} source={require('../assets/layer.png')}  resizeMode='contain'/>  */}
     
+      <View style={[styles.verticallySpaced,styles.mt20, styles.imagecontainer]}>
+        <Image source={require('../assets/logo_text.svg')} style={sentOtp ? styles.smallImage : styles.largeImage}  />
+      </View>
     <View style={styles.container}>
+
       
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
@@ -82,18 +95,19 @@ export default function Auth() {
           style={styles.input}
         />
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton} />
+      <View style={[styles.verticallySpaced, styles.mt20, styles.buttonContainer]}>
+        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} buttonStyle={styles.button} containerStyle={styles.buttonBox} disabledStyle={styles.disabledbutton} />
+        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} buttonStyle={styles.button} containerStyle={styles.buttonBox} disabledStyle={styles.disabledbutton} />
       </View>
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} buttonStyle={styles.button} containerStyle={styles.button} disabledStyle={styles.disabledbutton} />
-      </View>
+
+      
       
       {sentOtp ? (
         <>
           <View style={styles.verticallySpaced}>
             <Input
-              label="number"
+              ref={otpInputRef}
+              label="OTP"
               leftIcon={{ type: 'font-awesome', name: 'key', color: 'gray' }}
               onChangeText={(e) => setOtp(e)}
               value={otp}
@@ -124,6 +138,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
 
   },
+  smallImage:{
+    width: 200, 
+    height: 370
+  },
+  largeImage:{
+    width: 211, 
+    height: 375
+  },
+  imagecontainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
@@ -135,16 +163,29 @@ const styles = StyleSheet.create({
   input:{
     color: 'white',
   },
+  buttonContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-evenly',
+    // justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    padding: 2,
+  },
   button:{
-    backgroundColor: 'rgba(90, 120, 250, 0.3)',
+    backgroundColor: 'rgba(108, 79, 247, 0.3)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
     borderRadius: 24,
-    
+    width: '100%',
+  },
+  buttonBox:{
+    width: '50%',
   },
   disabledbutton:{
-    backgroundColor: 'rgba(90, 120, 250, 0.9)',
+    backgroundColor: 'rgba(108, 79, 247, 0.9)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,

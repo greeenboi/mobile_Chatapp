@@ -59,7 +59,7 @@ async function registerForPushNotificationsAsync() {
     token = await Notifications.getExpoPushTokenAsync({
       projectId: Constants.expoConfig.extra.eas.projectId,
     });
-    console.log(token);
+    // console.log(token);
   } else {
     alert('Must use physical device for Push Notifications');
   }
@@ -89,7 +89,7 @@ export default function App() {
   useEffect(() => {
 
     if (!session) {
-      console.log('Session is null');
+      // console.log('Session is null');
       return;
     }
 
@@ -101,7 +101,7 @@ export default function App() {
           updated_at: new Date(),
           expo_push_token: token,
         }
-        console.log(session?.user.id);
+        // console.log(session?.user.id);
         const { data, error } = await supabase
           .from('profiles')
           .upsert(updates)
@@ -109,10 +109,11 @@ export default function App() {
         if (error) {
           console.error('Error updating expo_push_token:', error);
         } else {
-          console.log('Successfully updated expo_push_token:', data);
+          // console.log('Successfully updated expo_push_token:', data);
         }
       } catch (error) {
         console.error('Unexpected error:', error);
+
       }
     });
 
@@ -121,7 +122,7 @@ export default function App() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
+      // console.log(response);
     });
 
     return () => {

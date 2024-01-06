@@ -89,6 +89,7 @@ export default function ChatInput() {
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
+        console.log(error.message);
       }
     } finally {
       setContent('');
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     flex:3,
   },
   sendButton:{
-    backgroundColor: 'rgba(90, 120, 250, 0.3)',
+    backgroundColor: 'rgba(108, 79, 247, 0.3)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
@@ -155,12 +156,12 @@ buttonContainer:{
     color: 'white',
     margin: 0,
     height: 60,
-    backgroundColor: 'rgba(90, 120, 250, 0.8)',
+    backgroundColor: 'rgba(108, 79, 247, 0.8)',
     width: 60,
     flex:1,
 },
 disabledbutton:{
-    backgroundColor: 'rgba(90, 120, 250, 0.9)',
+    backgroundColor: 'rgba(108, 79, 247, 0.9)',
     margin: 0,
     color: 'white',
     borderColor: 'white',

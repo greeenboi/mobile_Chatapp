@@ -133,7 +133,7 @@ export default function Chat({pushToken}: {pushToken: string})  {
       await sendPushNotification(pushToken, payload.new.content, payload.new.username);
     })();
     } // Immediately invoke the async function
-    console.log(payload.new);
+    // console.log(payload.new);
   }
 
   
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   sentMSG: {
-    backgroundColor: 'rgba(90,120,90,0.8)',
+    backgroundColor: 'rgba(12,120,90,0.8)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,

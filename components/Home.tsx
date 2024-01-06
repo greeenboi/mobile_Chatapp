@@ -18,26 +18,47 @@ export default function Home({pushToken}: {pushToken: string}) {
   const session = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchChannelName = async () => {
-      try {
-        let { data: profiles, error } = await supabase
-          .from('profiles')
-          .select('channel')
-          .eq('id', session.user.id);
     
-        if (error) throw error;
-    
-        if (profiles && profiles.length > 0) {
-          setChannelName(profiles[0].channel);
-        }
-      } catch (error) {
-        console.error('Error fetching channel name: ', error);
-      }
-    };
     // console.log('session.user.id: ', session.user.id);
     // console.log('channelName: ', channelName);
     fetchChannelName();
   },[])
+
+  useEffect(() =>{
+
+    try{
+      const subscription = supabase
+        .channel('namechange') 
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, fetchChannelName)
+        .subscribe();
+  
+  
+      return () => {
+        subscription.unsubscribe();
+      }
+
+    } catch (error) {
+      console.error('Error fetching channel name: ', error);
+    }
+  }, [session]);
+
+  const fetchChannelName = async () => {
+    try {
+      let { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('channel')
+        .eq('id', session.user.id);
+  
+      if (error) throw error;
+  
+      if (profiles && profiles.length > 0) {
+        setChannelName(profiles[0].channel);
+      }
+    } catch (error) {
+      console.error('Error fetching channel name: ', error);
+    }
+  };
+
 
   const Profilebutton = () => {
    return (
@@ -62,7 +83,7 @@ export default function Home({pushToken}: {pushToken: string}) {
             <Chat key={session.user.id} pushToken={pushToken} /> 
           </ScrollView>
             : 
-          <Profile key={session.user.id} session={session} />
+          <Profile key={session.user.id} session={session} channelName={channelName} />
         }
       {isProfile ? <ChatInput />  : null }
     </>
@@ -71,7 +92,7 @@ export default function Home({pushToken}: {pushToken: string}) {
 
 const styles = StyleSheet.create({
   button:{
-    backgroundColor: 'rgba(90, 120, 250, 0.3)',
+    backgroundColor: 'rgba(108, 79, 247, 0.3)',
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
@@ -86,7 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    backgroundColor: 'rgba(0,0,0, 0.5)',
+    backgroundColor: 'rgba(17,13,40, 0.4)',
     padding: 2,
   },
   disabledbutton:{
