@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "mobile_Chatapp",
-    "slug": "mobile_Chatapp",
-    "version": "1.0.0",
+    "name": "Pivote",
+    "slug": "Pivote",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "Dark",
     "jsEngine": "hermes",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#252323"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -21,7 +21,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#252323"
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"

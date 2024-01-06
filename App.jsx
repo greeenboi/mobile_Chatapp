@@ -11,6 +11,7 @@ import { ImageBackground } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { StatusBar } from 'react-native'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -142,6 +143,7 @@ export default function App() {
         )}
       
       </ImageBackground>
+      <StatusBar style="dark" />
     </AuthContext.Provider >
   )
 }

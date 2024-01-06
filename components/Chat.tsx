@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase'
 import { ScrollView } from 'react-native';
 import { Image } from 'expo-image'
 import NullMessage from './NullMessage';
+import { Button } from 'react-native-elements';
 
 async function sendPushNotification(expoPushToken, content , sender) {
   const message = {
@@ -207,7 +208,12 @@ export default function Chat({pushToken}: {pushToken: string})  {
               </View>
             ))
           )}
-          
+          {/* <View style={[styles.mb20]} >
+            <Button 
+              title="send test notification"
+              onPress={() => { sendPushNotification(pushToken, 'test', 'test') }}
+            />
+          </View> */}
         </ScrollView>
       </View>
       
